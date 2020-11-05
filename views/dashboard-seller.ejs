@@ -1,0 +1,156 @@
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+        <div class="card card-body">
+            <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i> Seller Dashboard</h1>
+            <label for="id1" class="col-lg-2 control-label">Shipment ID</label>
+            <input id="id1" type="text">
+
+            <label for="date1" class="col-lg-2 control-label">Shipment Date</label>
+            <input id="date1" type="text">
+
+            <label for="role" class="col-lg-2 control-label">Role</label>
+            <input id="role" type="text">
+
+            <button id="button1" class="btn btn-primary btn-block">Add Coal</button>
+        </div>
+    </div>
+    <script>
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+        }
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+        var CoalContract = web3.eth.contract([
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "index",
+                    "type": "uint256"
+                }
+            ],
+            "name": "Added",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_coalId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_date",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_location",
+                    "type": "string"
+                }
+            ],
+            "name": "addState",
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "_text",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_date",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_role",
+                    "type": "string"
+                }
+            ],
+            "name": "newCoal",
+            "outputs": [
+                {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "_a",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_b",
+                    "type": "string"
+                }
+            ],
+            "name": "concat",
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "pure",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_coalId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "searchCoal",
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]);
+    var contract = CoalContract.at('0x01b79A9DE7a13Eb749B646870dea9A0CC4F39519');
+    
+    contract.searchCoal($("#id1").val(), function(error, result){
+            if(!error){
+                    $("#id1").html(result[0]);
+                    console.log(result);
+                }
+            else
+                console.error(error);
+        });
+
+        $("#button1").click(function() {
+            contract.newCoal($("#id1").val(), $("#date1").val(), $("#role").val());
+        });
+    </script>
+</div>
